@@ -1,0 +1,96 @@
+import time
+import random
+
+questions = [
+    {
+        "question": "What is the capital of France?",
+        "options": ["Paris", "London", "Berlin", "Madrid"],
+        "answer": 0
+    },
+    {
+        "question": "What is the largest planet in our solar system?",
+        "options": ["Jupiter", "Saturn", "Mars", "Earth"],
+        "answer": 0
+    },
+    {
+        "question": "What is the smallest country in the world?",
+        "options": ["Vatican City", "Monaco", "San Marino", "Liechtenstein"],
+        "answer": 0
+    }
+]
+
+score = 0
+
+timer_duration = 30
+timer_running = False
+timer_start_time = 0
+
+def start_timer():
+    global timer_running, timer_start_time
+    timer_running = True
+    timer_start_time = time.time()
+
+def stop_timer():
+    global timer_running
+    timer_running = False
+
+def update_timer():
+    global timer_running, timer_start_time
+    if timer_running:
+        elapsed_time = time.time() - timer_start_time
+        remaining_time = timer_duration - elapsed_time
+        if remaining_time > 0:
+            print("\rTime remaining: {:02d}:{:02d}".format(int(remaining_time // 60), int(remaining_time % 60)), end="")
+        else:
+            print("\rTime's up!")
+            stop_timer()
+    else:
+        print("\rTimer stopped.")
+
+def display_question(question):
+    print("\nQuestion: " + question["question"])
+    for i, option in enumerate(question["options"]):
+        print("{}. {}".format(i+1, option))
+
+def handle_input(question):
+    global score
+    user_answer = int(input("Enter your answer (1-4): ")) - 1
+    if user_answer == question["answer"]:
+        print("Correct!")
+        score += 1
+    else:
+        print("Incorrect.")
+
+def start_quiz():
+    global questions, score
+    random.shuffle(questions)
+    for question in questions:
+        display_question(question)
+        start_timer()
+        handle_input(question)
+        stop_timer()
+        print("Your score: {}/{}".format(score, len(questions)))
+        time.sleep(2)
+
+while True:
+    print("\nQuiz Application")
+    print("1. Start quiz")
+    print("2. Pause/Resume quiz")
+    print("3. Restart quiz")
+    print("4. Exit")
+    user_input = int(input("Enter your choice (1-4): "))
+    if user_input == 1:
+        start_quiz()
+    elif user_input == 2:
+        if timer_running:
+            stop_timer()
+        else:
+            start_timer()
+    elif user_input == 3:
+        score = 0
+    elif user_input == 4:
+        break
+    else:
+        print("Invalid input. Please try again.")
+
+    update_timer()
