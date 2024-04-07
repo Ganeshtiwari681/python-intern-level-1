@@ -1,0 +1,15 @@
+import time
+
+def countdown_clock(seconds):
+    while seconds:
+        minutes, seconds = divmod(seconds, 60)
+        time_left = "{:02d}:{:02d}".format(minutes, seconds)
+
+        print(time_left, end="\r")
+        time.sleep(1)
+
+        seconds -= 1
+
+    print("Time's up!")
+
+countdown_clock(60)
